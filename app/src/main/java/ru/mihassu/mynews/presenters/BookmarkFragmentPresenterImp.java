@@ -12,6 +12,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import ru.mihassu.mynews.data.eventbus.ActualDataBus;
 import ru.mihassu.mynews.data.repository.RoomRepoBookmark;
+import ru.mihassu.mynews.domain.entity.Stack;
 import ru.mihassu.mynews.domain.model.MyArticle;
 import ru.mihassu.mynews.presenters.i.BookmarkFragmentPresenter;
 import ru.mihassu.mynews.ui.fragments.bookmark.BookmarkFragmentState;
@@ -37,6 +38,9 @@ public class BookmarkFragmentPresenterImp implements BookmarkFragmentPresenter {
         this.browserLauncher = browserLauncher;
         this.dataBus = dataBus;
     }
+
+    // Стек для хранения удаленных закладок
+    private Stack<MyArticle> undoStack = new Stack<>();
 
     @Override
     public void onFragmentConnected() {
@@ -97,6 +101,7 @@ public class BookmarkFragmentPresenterImp implements BookmarkFragmentPresenter {
                 roomRepoBookmark.insertArticle(article);
             } else {
                 roomRepoBookmark.deleteArticle(article);
+                undoStack.push(article);
             }
         }
     }
