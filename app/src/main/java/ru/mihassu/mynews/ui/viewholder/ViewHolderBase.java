@@ -134,11 +134,13 @@ public class ViewHolderBase extends RecyclerView.ViewHolder implements View.OnCl
 
     // Основной текст
     private void itemContentSetText(MyArticle item) {
-        String content = item.description.trim();
-        if (content.length() > contentThreshold) {
-            content = content.substring(0, contentThreshold) + "...";
+        if (item.description != null) {
+            String content = item.description.trim();
+            if (content.length() > contentThreshold) {
+                content = content.substring(0, contentThreshold) + "...";
+            }
+            itemContent.setText(content);
         }
-        itemContent.setText(content);
     }
 
     // Показать favicon.ico и дату новости
