@@ -8,6 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +17,8 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import javax.inject.Inject;
 
@@ -39,6 +42,7 @@ public class BookmarksFragment extends Fragment implements BookmarkView, Observe
 
     private Menu menu;
 
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,9 +61,14 @@ public class BookmarksFragment extends Fragment implements BookmarkView, Observe
             ViewGroup container,
             Bundle savedInstanceState) {
 
-        View viewFragment = inflater.inflate(R.layout.fragment_bookmarks, container, false);
+        View viewFragment = inflater.inflate(
+                R.layout.fragment_bookmark_with_bottomsheet,
+                container,
+                false);
         bookmarkPresenter.onFragmentConnected(this);
         this.setHasOptionsMenu(true);
+
+        initBottomSheetMenu(viewFragment);
 
         return viewFragment;
     }
@@ -114,6 +123,23 @@ public class BookmarksFragment extends Fragment implements BookmarkView, Observe
         menu.findItem(R.id.menu_undo).setVisible(false);
     }
 
+    private void initBottomSheetMenu(View viewFragment) {
+        BottomSheetBehavior bsb =
+                BottomSheetBehavior.from(viewFragment.findViewById(R.id.bookmarks_bottomSheet));
+        ImageView ivArrow = viewFragment.findViewById(R.id.iv_arrow);
+
+        bsb.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                animateBottomSheetArrows(ivArrow, slideOffset);
+            }
+        });
+    }
+
     @SuppressWarnings("unchecked")
     private void initRecyclerView(RecyclerView rv) {
         bookmarkPresenter.subscribe().observe(getViewLifecycleOwner(), this);
@@ -127,5 +153,10 @@ public class BookmarksFragment extends Fragment implements BookmarkView, Observe
                 new ItemTouchHelperCallback(adapter);
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(rv);
+    }
+
+    // Поворот стрелки при движении BottomSheet
+    private void animateBottomSheetArrows(ImageView imgArrow, float slideOffset) {
+        imgArrow.setRotation(slideOffset * -180f);
     }
 }
