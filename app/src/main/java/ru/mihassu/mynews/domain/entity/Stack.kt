@@ -29,11 +29,12 @@ class Stack<T> : Iterable<T> {
     }
 
     fun peek(): T? {
-        if (isEmpty()) {
-            return null
-        } else {
-            return this.items[this.items.count() - 1]
+
+        var result: T? = null
+        if (!this.isEmpty()) {
+            result = this.items[this.items.count() - 1]
         }
+        return result;
     }
 
     fun clear() {

@@ -14,7 +14,6 @@ import ru.mihassu.mynews.domain.model.DataSnapshot;
 import ru.mihassu.mynews.domain.model.MyArticle;
 import ru.mihassu.mynews.presenters.i.ArticlePresenter;
 import ru.mihassu.mynews.ui.fragments.main.MainFragmentState;
-import ru.mihassu.mynews.ui.viewholder.ItemUpdateListener;
 import ru.mihassu.mynews.ui.web.BrowserLauncher;
 
 import static ru.mihassu.mynews.Utils.logIt;
@@ -88,10 +87,6 @@ public class RegularArticlePresenter implements ArticlePresenter {
         browserLauncher.showInBrowser(articleUrl);
     }
 
-    @Override
-    public void bindBookmarkChangeListener(ItemUpdateListener listener) {
-
-    }
 
     /**
      * Выдать список статей согласно индексу таба (отдельная категория статей)

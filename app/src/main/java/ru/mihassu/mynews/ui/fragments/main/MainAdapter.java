@@ -34,8 +34,6 @@ public class MainAdapter extends RecyclerView.Adapter<ViewHolderBase>
         this.scrollEventsObs = scrollEventsObs;
         this.articlePresenter = articlePresenter;
         this.tabPosition = tabPosition;
-
-        this.articlePresenter.bindBookmarkChangeListener(this);
     }
 
     /**

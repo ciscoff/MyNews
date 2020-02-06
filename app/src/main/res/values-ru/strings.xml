@@ -31,4 +31,7 @@
     <string name="time_hours_2_4">часа</string>
     <string name="time_hours_5_0">часов</string>
     <string name="time_ago">назад</string>
+
+    <!--    Menu -->
+    <string name="menu_undo">Восстановить</string>
 </resources>

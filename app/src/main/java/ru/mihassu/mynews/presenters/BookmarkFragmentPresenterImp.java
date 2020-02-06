@@ -13,10 +13,11 @@ import io.reactivex.disposables.Disposable;
 import ru.mihassu.mynews.data.eventbus.ActualDataBus;
 import ru.mihassu.mynews.data.repository.RoomRepoBookmark;
 import ru.mihassu.mynews.domain.entity.Stack;
+import ru.mihassu.mynews.domain.entity.UndoStatus;
 import ru.mihassu.mynews.domain.model.MyArticle;
 import ru.mihassu.mynews.presenters.i.BookmarkFragmentPresenter;
+import ru.mihassu.mynews.presenters.i.BookmarkView;
 import ru.mihassu.mynews.ui.fragments.bookmark.BookmarkFragmentState;
-import ru.mihassu.mynews.ui.viewholder.ItemUpdateListener;
 import ru.mihassu.mynews.ui.web.BrowserLauncher;
 
 import static ru.mihassu.mynews.Utils.logIt;
@@ -24,11 +25,11 @@ import static ru.mihassu.mynews.Utils.logIt;
 public class BookmarkFragmentPresenterImp implements BookmarkFragmentPresenter {
 
     private MutableLiveData<BookmarkFragmentState> liveData = new MutableLiveData<>();
-    private ItemUpdateListener listener;
     private BrowserLauncher browserLauncher;
     private RoomRepoBookmark roomRepoBookmark;
     private ActualDataBus dataBus;
     private Disposable disposable;
+    private BookmarkView bookmarkView;
 
 
     public BookmarkFragmentPresenterImp(ActualDataBus dataBus,
@@ -43,8 +44,9 @@ public class BookmarkFragmentPresenterImp implements BookmarkFragmentPresenter {
     private Stack<MyArticle> undoStack = new Stack<>();
 
     @Override
-    public void onFragmentConnected() {
+    public void onFragmentConnected(BookmarkView bookmarkView) {
         disposable = connectToRepo();
+        this.bookmarkView = bookmarkView;
     }
 
     @Override
@@ -53,12 +55,33 @@ public class BookmarkFragmentPresenterImp implements BookmarkFragmentPresenter {
             disposable.dispose();
         }
 
-        listener = null;
+        bookmarkView = null;
     }
 
     @Override
     public LiveData<BookmarkFragmentState> subscribe() {
         return liveData;
+    }
+
+    @Override
+    public UndoStatus getUndoStatus() {
+        return (undoStack.isEmpty()) ? UndoStatus.EMPTY : UndoStatus.PRESENT;
+    }
+
+    @Override
+    public void restoreRecent() {
+        if(!undoStack.isEmpty()) {
+            MyArticle article = undoStack.pop();
+
+            if(article != null) {
+                article.isMarked = true;
+                roomRepoBookmark.insertArticle(article);
+            }
+        }
+
+        if(undoStack.isEmpty()) {
+            bookmarkView.onAllRestored();
+        }
     }
 
     private Disposable connectToRepo() {
@@ -102,6 +125,10 @@ public class BookmarkFragmentPresenterImp implements BookmarkFragmentPresenter {
             } else {
                 roomRepoBookmark.deleteArticle(article);
                 undoStack.push(article);
+
+                if(bookmarkView != null) {
+                    bookmarkView.onBookmarkDeleted();
+                }
             }
         }
     }
@@ -139,11 +166,6 @@ public class BookmarkFragmentPresenterImp implements BookmarkFragmentPresenter {
     @Override
     public String getHighlight() {
         return "";
-    }
-
-    @Override
-    public void bindBookmarkChangeListener(ItemUpdateListener listener) {
-        this.listener = listener;
     }
 
     // Найти статью в общем списке по её ID
