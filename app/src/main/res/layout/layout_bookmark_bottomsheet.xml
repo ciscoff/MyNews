@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bookmarks_bottomSheet"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="128dp"
     android:background="?attr/colorOnBackground"
     android:orientation="vertical"
     app:behavior_hideable="false"
-    app:behavior_peekHeight="28dp"
+    app:behavior_peekHeight="0dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <!--Крышка-слайдер с закругленными верхними углами-->
@@ -15,7 +15,7 @@
         android:id="@+id/card_cap"
         style="@style/AppShapeAppearance.LargeComponent"
         android:layout_width="match_parent"
-        android:layout_height="28dp"
+        android:layout_height="@dimen/peek_height"
         android:backgroundTint="?attr/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

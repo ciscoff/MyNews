@@ -18,4 +18,5 @@
 
     <!-- BottomSheet -->
     <dimen name="menu_item_margin">20dp</dimen>
+    <dimen name="peek_height">28dp</dimen>
 </resources>

@@ -11,4 +11,6 @@ public interface BookmarkFragmentPresenter extends ArticlePresenter{
     void onFragmentDisconnected();
     UndoStatus getUndoStatus();
     void restoreRecent();
+    void restoreAll();
+    void deleteAll();
 }

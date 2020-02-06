@@ -24,6 +24,7 @@ import javax.inject.Inject;
 
 import ru.mihassu.mynews.App;
 import ru.mihassu.mynews.R;
+import ru.mihassu.mynews.Utils;
 import ru.mihassu.mynews.di.modules.ui.BookmarkFragmentModule;
 import ru.mihassu.mynews.domain.entity.UndoStatus;
 import ru.mihassu.mynews.presenters.i.BookmarkFragmentPresenter;
@@ -41,7 +42,7 @@ public class BookmarksFragment extends Fragment implements BookmarkView, Observe
     BookmarkFragmentPresenter bookmarkPresenter;
 
     private Menu menu;
-
+    private View fragment;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,6 +68,7 @@ public class BookmarksFragment extends Fragment implements BookmarkView, Observe
                 false);
         bookmarkPresenter.onFragmentConnected(this);
         this.setHasOptionsMenu(true);
+        this.fragment = viewFragment;
 
         initBottomSheetMenu(viewFragment);
 
@@ -115,6 +117,7 @@ public class BookmarksFragment extends Fragment implements BookmarkView, Observe
 
     @Override
     public void onBookmarkDeleted() {
+        moveUpBottomSheetMenu(fragment);
         menu.findItem(R.id.menu_undo).setVisible(true);
     }
 
@@ -126,7 +129,25 @@ public class BookmarksFragment extends Fragment implements BookmarkView, Observe
     private void initBottomSheetMenu(View viewFragment) {
         BottomSheetBehavior bsb =
                 BottomSheetBehavior.from(viewFragment.findViewById(R.id.bookmarks_bottomSheet));
+
+        // Перехватывать касания. Иначе они "пролетают" на нижний слой
+        bsb.setDraggable(true);
+
         ImageView ivArrow = viewFragment.findViewById(R.id.iv_arrow);
+
+        viewFragment.findViewById(R.id.iv_undo_recent).setOnClickListener(v ->
+                bookmarkPresenter.restoreRecent()
+        );
+
+        viewFragment.findViewById(R.id.iv_undo_all).setOnClickListener(v -> {
+                    bookmarkPresenter.restoreAll();
+                    moveDownBottomSheetMenu(fragment);
+                }
+        );
+
+        viewFragment.findViewById(R.id.iv_delete_all).setOnClickListener(v ->
+                bookmarkPresenter.deleteAll()
+        );
 
         bsb.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
@@ -138,6 +159,20 @@ public class BookmarksFragment extends Fragment implements BookmarkView, Observe
                 animateBottomSheetArrows(ivArrow, slideOffset);
             }
         });
+    }
+
+    // Показать "крышку" BottomSheet
+    private void moveUpBottomSheetMenu(View viewFragment) {
+        BottomSheetBehavior bsb =
+                BottomSheetBehavior.from(viewFragment.findViewById(R.id.bookmarks_bottomSheet));
+        bsb.setPeekHeight(getResources().getDimensionPixelSize(R.dimen.peek_height), true);
+    }
+
+    // Спрятать BottomSheet
+    private void moveDownBottomSheetMenu(View viewFragment) {
+        BottomSheetBehavior bsb =
+                BottomSheetBehavior.from(viewFragment.findViewById(R.id.bookmarks_bottomSheet));
+        bsb.setPeekHeight(0, true);
     }
 
     @SuppressWarnings("unchecked")

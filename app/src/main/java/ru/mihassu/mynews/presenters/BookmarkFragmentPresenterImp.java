@@ -68,19 +68,49 @@ public class BookmarkFragmentPresenterImp implements BookmarkFragmentPresenter {
         return (undoStack.isEmpty()) ? UndoStatus.EMPTY : UndoStatus.PRESENT;
     }
 
+    // Восстановить последнюю удаленную статью
     @Override
     public void restoreRecent() {
-        if(!undoStack.isEmpty()) {
+        if (!undoStack.isEmpty()) {
             MyArticle article = undoStack.pop();
 
-            if(article != null) {
+            if (article != null) {
                 article.isMarked = true;
                 roomRepoBookmark.insertArticle(article);
             }
         }
 
-        if(undoStack.isEmpty()) {
+        if (undoStack.isEmpty()) {
             bookmarkView.onAllRestored();
+        }
+    }
+
+    // Восстановить все удаленные статьи
+    @Override
+    public void restoreAll() {
+
+        while (!undoStack.isEmpty()) {
+            MyArticle article = undoStack.pop();
+
+            if (article != null) {
+                article.isMarked = true;
+                roomRepoBookmark.insertArticle(article);
+            }
+        }
+
+        bookmarkView.onAllRestored();
+    }
+
+    // Очистить список закладок (поместить в undoStack)
+    @Override
+    public void deleteAll() {
+        if (liveData.getValue() != null) {
+            List<MyArticle> li = new ArrayList<>(liveData.getValue().getArticles());
+
+            li.forEach( article -> {
+                roomRepoBookmark.deleteArticle(article);
+                undoStack.push(article);
+            });
         }
     }
 
@@ -126,7 +156,7 @@ public class BookmarkFragmentPresenterImp implements BookmarkFragmentPresenter {
                 roomRepoBookmark.deleteArticle(article);
                 undoStack.push(article);
 
-                if(bookmarkView != null) {
+                if (bookmarkView != null) {
                     bookmarkView.onBookmarkDeleted();
                 }
             }
