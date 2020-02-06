@@ -10,7 +10,6 @@ public interface ArticlePresenter {
     int getTabCount();
     void onClickBookmark(long articleId);
     void onClickArticle(String articleUrl);
-    void bindBookmarkChangeListener(ItemUpdateListener listener);
     List<MyArticle> getTabArticles(int tabPosition);
     List<MyArticle> getArticles();
     MyArticle getArticle(int listPosition);

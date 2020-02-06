@@ -39,7 +39,6 @@ public class BookmarkAdapter extends ListAdapter<MyArticle, ViewHolderBase>
     public BookmarkAdapter(BookmarkFragmentPresenter presenter) {
         super(DiffCallback);
         this.presenter = presenter;
-        presenter.bindBookmarkChangeListener(this);
     }
 
     @Override

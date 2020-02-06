@@ -288,12 +288,14 @@ public class MainFragment extends Fragment implements Observer, ru.mihassu.mynew
 
     private void showUpdateSnackbar() {
 
+        int twentySeconds = 20 * 1000;
+
         hideUpdateSnackbar();
         updateSnackbar = CustomSnackbar.make(coordinatorLayoutView);
         updateSnackbar
                 .setBackground(R.drawable.snackbar_update_bg)
                 .setText(R.string.press_to_update)
-                .setDuration(Snackbar.LENGTH_INDEFINITE)
+                .setDuration(twentySeconds)
                 .setOnClickHandler(this::launchUpdate)
                 .show();
     }

@@ -3,6 +3,9 @@ package ru.mihassu.mynews.ui.fragments.bookmark;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -19,9 +22,11 @@ import javax.inject.Inject;
 import ru.mihassu.mynews.App;
 import ru.mihassu.mynews.R;
 import ru.mihassu.mynews.di.modules.ui.BookmarkFragmentModule;
+import ru.mihassu.mynews.domain.entity.UndoStatus;
 import ru.mihassu.mynews.presenters.i.BookmarkFragmentPresenter;
+import ru.mihassu.mynews.presenters.i.BookmarkView;
 
-public class BookmarksFragment extends Fragment implements Observer {
+public class BookmarksFragment extends Fragment implements BookmarkView, Observer {
 
     @Inject
     Context context;
@@ -32,10 +37,12 @@ public class BookmarksFragment extends Fragment implements Observer {
     @Inject
     BookmarkFragmentPresenter bookmarkPresenter;
 
+    private Menu menu;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
+        this.setRetainInstance(true);
 
         App
                 .get()
@@ -51,9 +58,9 @@ public class BookmarksFragment extends Fragment implements Observer {
             Bundle savedInstanceState) {
 
         View viewFragment = inflater.inflate(R.layout.fragment_bookmarks, container, false);
-        bookmarkPresenter.onFragmentConnected();
+        bookmarkPresenter.onFragmentConnected(this);
+        this.setHasOptionsMenu(true);
 
-//        setHasOptionsMenu(true);
         return viewFragment;
     }
 
@@ -67,7 +74,29 @@ public class BookmarksFragment extends Fragment implements Observer {
     public void onDestroy() {
         super.onDestroy();
         bookmarkPresenter.onFragmentDisconnected();
+    }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+
+        inflater.inflate(R.menu.menu_bookmark, menu);
+        menu.findItem(R.id.menu_undo).setVisible(bookmarkPresenter.getUndoStatus() != UndoStatus.EMPTY);
+        this.menu = menu;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.menu_undo:
+                bookmarkPresenter.restoreRecent();
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return true;
     }
 
     @Override
@@ -75,8 +104,19 @@ public class BookmarksFragment extends Fragment implements Observer {
         adapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onBookmarkDeleted() {
+        menu.findItem(R.id.menu_undo).setVisible(true);
+    }
+
+    @Override
+    public void onAllRestored() {
+        menu.findItem(R.id.menu_undo).setVisible(false);
+    }
+
+    @SuppressWarnings("unchecked")
     private void initRecyclerView(RecyclerView rv) {
-        bookmarkPresenter.subscribe().observe(this, this);
+        bookmarkPresenter.subscribe().observe(getViewLifecycleOwner(), this);
 
         rv.setLayoutManager(new LinearLayoutManager(context));
         rv.setHasFixedSize(false);
