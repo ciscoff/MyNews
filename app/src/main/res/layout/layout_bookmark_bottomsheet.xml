@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bookmarks_bottomSheet"
     android:layout_width="match_parent"
-    android:layout_height="128dp"
+    android:layout_height="wrap_content"
     android:background="?attr/colorOnBackground"
     android:orientation="vertical"
     app:behavior_hideable="false"
@@ -27,34 +27,71 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|center_horizontal"
+            android:contentDescription="@null"
             app:srcCompat="@drawable/vd_arrow" />
     </com.google.android.material.card.MaterialCardView>
 
-    <ImageView
-        android:id="@+id/iv_undo_recent"
-        style="@style/MenuIconTheme"
-        android:contentDescription="@null"
-        app:layout_constraintEnd_toStartOf="@id/iv_undo_all"
+    <LinearLayout
+        android:id="@+id/ll_undo_recent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toStartOf="@id/ll_undo_all"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/card_cap"
-        app:srcCompat="@drawable/vd_undo_recent" />
+        app:layout_constraintTop_toBottomOf="@id/card_cap">
 
-    <ImageView
-        android:id="@+id/iv_undo_all"
-        style="@style/MenuIconTheme"
-        android:contentDescription="@null"
-        app:layout_constraintEnd_toStartOf="@id/iv_delete_all"
-        app:layout_constraintStart_toEndOf="@id/iv_undo_recent"
-        app:layout_constraintTop_toBottomOf="@id/card_cap"
-        app:srcCompat="@drawable/vd_undo_all" />
+        <ImageView
+            android:id="@+id/iv_undo_recent"
+            style="@style/MenuIconTheme"
+            android:contentDescription="@null"
+            app:srcCompat="@drawable/vd_undo_recent" />
 
-    <ImageView
-        android:id="@+id/iv_delete_all"
-        style="@style/MenuIconTheme"
-        android:contentDescription="@null"
+        <TextView
+            style="@style/MenuTextTheme"
+            android:text="@string/menu_undo_recent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_undo_all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toStartOf="@id/ll_delete_all"
+        app:layout_constraintStart_toEndOf="@id/ll_undo_recent"
+        app:layout_constraintTop_toBottomOf="@id/card_cap">
+
+        <ImageView
+            android:id="@+id/iv_undo_all"
+            style="@style/MenuIconTheme"
+            android:contentDescription="@null"
+            app:srcCompat="@drawable/vd_undo_all" />
+
+        <TextView
+            style="@style/MenuTextTheme"
+            android:text="@string/menu_undo_all" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_delete_all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/iv_undo_all"
-        app:layout_constraintTop_toBottomOf="@id/card_cap"
-        app:srcCompat="@drawable/vd_delete_all" />
+        app:layout_constraintStart_toEndOf="@id/ll_undo_all"
+        app:layout_constraintTop_toBottomOf="@id/card_cap">
+
+        <ImageView
+            android:id="@+id/iv_delete_all"
+            style="@style/MenuIconTheme"
+            android:contentDescription="@null"
+            app:srcCompat="@drawable/vd_delete_all" />
+
+        <TextView
+            style="@style/MenuTextTheme"
+            android:text="@string/menu_delete_all" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

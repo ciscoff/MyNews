@@ -11,6 +11,7 @@
         <item name="colorAccent">#7C4DFF</item>
         <item name="colorOnBackground">@color/colorBackgroundLight</item>
         <item name="menuIconTint">@color/colorIconInLight</item>
+        <item name="menuTextColor">@color/colorIconInLight</item>
     </style>
 
     <style name="AppThemeDark" parent="ThemeOverlay.MaterialComponents.Dark">
@@ -19,6 +20,7 @@
         <item name="colorAccent">#7C4DFF</item>
         <item name="colorOnBackground">@color/colorBackgroundDark</item>
         <item name="menuIconTint">@color/colorIconInDark</item>
+        <item name="menuTextColor">@color/colorIconInDark</item>
     </style>
 
     <style name="FullScreenTheme" parent="AppThemePurple" >
@@ -35,6 +37,14 @@
         <item name="android:layout_marginBottom">@dimen/menu_item_margin</item>
         <item name="android:tint">?attr/menuIconTint</item>
     </style>
+
+    <style name="MenuTextTheme">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">@dimen/menu_item_margin</item>
+        <item name="android:textColor">?attr/menuTextColor</item>
+    </style>
+
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

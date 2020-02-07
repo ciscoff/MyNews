@@ -17,6 +17,6 @@
     <integer name="update_interval_minutes">20</integer>
 
     <!-- BottomSheet -->
-    <dimen name="menu_item_margin">20dp</dimen>
+    <dimen name="menu_item_margin">16dp</dimen>
     <dimen name="peek_height">28dp</dimen>
 </resources>

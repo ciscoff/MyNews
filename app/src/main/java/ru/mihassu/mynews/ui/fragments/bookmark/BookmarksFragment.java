@@ -1,17 +1,18 @@
 package ru.mihassu.mynews.ui.fragments.bookmark;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -19,12 +20,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.snackbar.Snackbar;
 
 import javax.inject.Inject;
 
 import ru.mihassu.mynews.App;
 import ru.mihassu.mynews.R;
-import ru.mihassu.mynews.Utils;
 import ru.mihassu.mynews.di.modules.ui.BookmarkFragmentModule;
 import ru.mihassu.mynews.domain.entity.UndoStatus;
 import ru.mihassu.mynews.presenters.i.BookmarkFragmentPresenter;
@@ -41,8 +42,8 @@ public class BookmarksFragment extends Fragment implements BookmarkView, Observe
     @Inject
     BookmarkFragmentPresenter bookmarkPresenter;
 
-    private Menu menu;
     private View fragment;
+    private CoordinatorLayout coordinatorLayout;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,8 +70,13 @@ public class BookmarksFragment extends Fragment implements BookmarkView, Observe
         bookmarkPresenter.onFragmentConnected(this);
         this.setHasOptionsMenu(true);
         this.fragment = viewFragment;
+        this.coordinatorLayout = viewFragment.findViewById(R.id.cl_snackbar_parent);
 
         initBottomSheetMenu(viewFragment);
+
+        if (bookmarkPresenter.getUndoStatus() == UndoStatus.PRESENT) {
+            moveUpBottomSheetMenu(viewFragment);
+        }
 
         return viewFragment;
     }
@@ -88,42 +94,41 @@ public class BookmarksFragment extends Fragment implements BookmarkView, Observe
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
-
-        inflater.inflate(R.menu.menu_bookmark, menu);
-        menu.findItem(R.id.menu_undo).setVisible(bookmarkPresenter.getUndoStatus() != UndoStatus.EMPTY);
-        this.menu = menu;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.menu_undo:
-                bookmarkPresenter.restoreRecent();
-                break;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-        return true;
-    }
-
-    @Override
     public void onChanged(Object o) {
         adapter.notifyDataSetChanged();
     }
 
     @Override
-    public void onBookmarkDeleted() {
-        moveUpBottomSheetMenu(fragment);
-        menu.findItem(R.id.menu_undo).setVisible(true);
+    public void onBookmarkRestored(int qty, int remain) {
+
+        if (remain > 0) {
+            moveUpBottomSheetMenu(fragment);
+        } else {
+            moveDownBottomSheetMenu(fragment);
+        }
+
+        if (qty > 0) {
+            String message = new StringBuilder(context.getString(R.string.message_restored))
+                    .append("  ")
+                    .append(qty)
+                    .toString();
+            showSnackBar(message);
+        }
     }
 
     @Override
-    public void onAllRestored() {
-        menu.findItem(R.id.menu_undo).setVisible(false);
+    public void onBookmarkDeleted(int qty) {
+
+        // Если что-то удалили, значит undoStack не пустой, значит подсвечиваем крышку BottomSheet
+        moveUpBottomSheetMenu(fragment);
+
+        if (qty > 1) {
+            String message = new StringBuilder(context.getString(R.string.message_deleted))
+                    .append("  ")
+                    .append(qty)
+                    .toString();
+            showSnackBar(message);
+        }
     }
 
     private void initBottomSheetMenu(View viewFragment) {
@@ -135,17 +140,15 @@ public class BookmarksFragment extends Fragment implements BookmarkView, Observe
 
         ImageView ivArrow = viewFragment.findViewById(R.id.iv_arrow);
 
-        viewFragment.findViewById(R.id.iv_undo_recent).setOnClickListener(v ->
+        viewFragment.findViewById(R.id.ll_undo_recent).setOnClickListener(v ->
                 bookmarkPresenter.restoreRecent()
         );
 
-        viewFragment.findViewById(R.id.iv_undo_all).setOnClickListener(v -> {
-                    bookmarkPresenter.restoreAll();
-                    moveDownBottomSheetMenu(fragment);
-                }
+        viewFragment.findViewById(R.id.ll_undo_all).setOnClickListener(v ->
+                bookmarkPresenter.restoreAll()
         );
 
-        viewFragment.findViewById(R.id.iv_delete_all).setOnClickListener(v ->
+        viewFragment.findViewById(R.id.ll_delete_all).setOnClickListener(v ->
                 bookmarkPresenter.deleteAll()
         );
 
@@ -193,5 +196,26 @@ public class BookmarksFragment extends Fragment implements BookmarkView, Observe
     // Поворот стрелки при движении BottomSheet
     private void animateBottomSheetArrows(ImageView imgArrow, float slideOffset) {
         imgArrow.setRotation(slideOffset * -180f);
+    }
+
+    // Показать SnackBar
+    private void showSnackBar(String message) {
+
+        Snackbar snackbar = Snackbar
+                .make(coordinatorLayout, message, Snackbar.LENGTH_SHORT)
+                .setTextColor(Color.WHITE)
+                .setBackgroundTint(ContextCompat.getColor(context, R.color.colorPrimary));
+
+        final Snackbar.SnackbarLayout snackBarLayout = (Snackbar.SnackbarLayout) snackbar.getView();
+
+        for (int i = 0; i < snackBarLayout.getChildCount(); i++) {
+            View parent = snackBarLayout.getChildAt(i);
+            if (parent instanceof LinearLayout) {
+                parent.setRotation(180);
+                break;
+            }
+        }
+
+        snackbar.show();
     }
 }

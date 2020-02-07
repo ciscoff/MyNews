@@ -5,6 +5,8 @@ import dagger.Provides;
 import ru.mihassu.mynews.data.eventbus.ActualDataBus;
 import ru.mihassu.mynews.data.repository.RoomRepoBookmark;
 import ru.mihassu.mynews.di.qualifiers.BookmarkFragmentScope;
+import ru.mihassu.mynews.domain.entity.Stack;
+import ru.mihassu.mynews.domain.model.MyArticle;
 import ru.mihassu.mynews.presenters.BookmarkFragmentPresenterImp;
 import ru.mihassu.mynews.presenters.i.BookmarkFragmentPresenter;
 import ru.mihassu.mynews.ui.fragments.bookmark.BookmarkAdapter;
@@ -33,8 +35,9 @@ public class BookmarkFragmentModule {
     BookmarkFragmentPresenter provideFragmentPresenter(
             ActualDataBus dataBus,
             RoomRepoBookmark roomRepoBookmark,
-            BrowserLauncher browserLauncher) {
-        return new BookmarkFragmentPresenterImp(dataBus, roomRepoBookmark, browserLauncher);
+            BrowserLauncher browserLauncher,
+            Stack<MyArticle> undoStack) {
+        return new BookmarkFragmentPresenterImp(dataBus, roomRepoBookmark, browserLauncher, undoStack);
     }
 
     @Provides

@@ -37,6 +37,12 @@
     <string name="time_hours_5_0">hours</string>
     <string name="time_ago">ago</string>
 
-    <!--    Menu -->
+    <!--    Menu Undo -->
     <string name="menu_undo">Restore</string>
+    <string name="menu_undo_recent">Recent</string>
+    <string name="menu_undo_all">All</string>
+    <string name="menu_delete_all">Clear</string>
+    <string name="message_restored">Restored:</string>
+    <string name="message_deleted">Deleted:</string>
+
 </resources>
