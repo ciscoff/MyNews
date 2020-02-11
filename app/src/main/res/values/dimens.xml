@@ -17,6 +17,9 @@
     <integer name="update_interval_minutes">20</integer>
 
     <!-- BottomSheet -->
-    <dimen name="menu_item_margin">16dp</dimen>
+    <dimen name="menu_item_margin">4dp</dimen>
     <dimen name="peek_height">28dp</dimen>
+    <dimen name="badge_text_size">8sp</dimen>
+    <dimen name="badge_padding">3sp</dimen>
+
 </resources>

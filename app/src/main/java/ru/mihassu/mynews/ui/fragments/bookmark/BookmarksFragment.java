@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -72,11 +73,7 @@ public class BookmarksFragment extends Fragment implements BookmarkView, Observe
         this.fragment = viewFragment;
         this.coordinatorLayout = viewFragment.findViewById(R.id.cl_snackbar_parent);
 
-        initBottomSheetMenu(viewFragment);
-
-        if (bookmarkPresenter.getUndoStatus() == UndoStatus.PRESENT) {
-            moveUpBottomSheetMenu(viewFragment);
-        }
+        initBottomSheetMenu(viewFragment, bookmarkPresenter.getUndoCount());
 
         return viewFragment;
     }
@@ -114,10 +111,12 @@ public class BookmarksFragment extends Fragment implements BookmarkView, Observe
                     .toString();
             showSnackBar(message);
         }
+
+        updateBadgeView(fragment.findViewById(R.id.tv_badge), remain);
     }
 
     @Override
-    public void onBookmarkDeleted(int qty) {
+    public void onBookmarkDeleted(int qty, int itemsInBasket) {
 
         // Если что-то удалили, значит undoStack не пустой, значит подсвечиваем крышку BottomSheet
         moveUpBottomSheetMenu(fragment);
@@ -129,9 +128,11 @@ public class BookmarksFragment extends Fragment implements BookmarkView, Observe
                     .toString();
             showSnackBar(message);
         }
+
+        updateBadgeView(fragment.findViewById(R.id.tv_badge), itemsInBasket);
     }
 
-    private void initBottomSheetMenu(View viewFragment) {
+    private void initBottomSheetMenu(View viewFragment, int undoQty) {
         BottomSheetBehavior bsb =
                 BottomSheetBehavior.from(viewFragment.findViewById(R.id.bookmarks_bottomSheet));
 
@@ -140,15 +141,15 @@ public class BookmarksFragment extends Fragment implements BookmarkView, Observe
 
         ImageView ivArrow = viewFragment.findViewById(R.id.iv_arrow);
 
-        viewFragment.findViewById(R.id.ll_undo_recent).setOnClickListener(v ->
+        viewFragment.findViewById(R.id.cl_undo_recent).setOnClickListener(v ->
                 bookmarkPresenter.restoreRecent()
         );
 
-        viewFragment.findViewById(R.id.ll_undo_all).setOnClickListener(v ->
+        viewFragment.findViewById(R.id.cl_undo_all).setOnClickListener(v ->
                 bookmarkPresenter.restoreAll()
         );
 
-        viewFragment.findViewById(R.id.ll_delete_all).setOnClickListener(v ->
+        viewFragment.findViewById(R.id.cl_delete_all).setOnClickListener(v ->
                 bookmarkPresenter.deleteAll()
         );
 
@@ -162,6 +163,12 @@ public class BookmarksFragment extends Fragment implements BookmarkView, Observe
                 animateBottomSheetArrows(ivArrow, slideOffset);
             }
         });
+
+        updateBadgeView(viewFragment.findViewById(R.id.tv_badge), undoQty);
+
+        if(undoQty != 0) {
+            moveUpBottomSheetMenu(viewFragment);
+        }
     }
 
     // Показать "крышку" BottomSheet
@@ -217,5 +224,15 @@ public class BookmarksFragment extends Fragment implements BookmarkView, Observe
         }
 
         snackbar.show();
+    }
+
+    private void updateBadgeView(View view, int qty) {
+
+        if(qty == 0) {
+            view.setVisibility(View.INVISIBLE);
+        } else {
+            ((TextView)view).setText(Integer.toString(qty));
+            view.setVisibility(View.VISIBLE);
+        }
     }
 }

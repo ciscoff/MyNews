@@ -9,8 +9,8 @@ public interface BookmarkFragmentPresenter extends ArticlePresenter{
     LiveData<BookmarkFragmentState> subscribe();
     void onFragmentConnected(BookmarkView bookmarkView);
     void onFragmentDisconnected();
-    UndoStatus getUndoStatus();
     void restoreRecent();
     void restoreAll();
     void deleteAll();
+    int getUndoCount();
 }

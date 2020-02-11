@@ -34,14 +34,14 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/menu_item_margin</item>
-        <item name="android:layout_marginBottom">@dimen/menu_item_margin</item>
+<!--        <item name="android:layout_marginBottom">@dimen/menu_item_margin</item>-->
         <item name="android:tint">?attr/menuIconTint</item>
     </style>
 
     <style name="MenuTextTheme">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginBottom">@dimen/menu_item_margin</item>
+<!--        <item name="android:layout_marginBottom">@dimen/menu_item_margin</item>-->
         <item name="android:textColor">?attr/menuTextColor</item>
     </style>
 

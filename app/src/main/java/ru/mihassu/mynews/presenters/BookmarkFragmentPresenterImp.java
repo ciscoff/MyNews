@@ -63,8 +63,8 @@ public class BookmarkFragmentPresenterImp implements BookmarkFragmentPresenter {
     }
 
     @Override
-    public UndoStatus getUndoStatus() {
-        return (undoStack.isEmpty()) ? UndoStatus.EMPTY : UndoStatus.PRESENT;
+    public int getUndoCount() {
+        return undoStack.count();
     }
 
     // Восстановить последнюю удаленную статью
@@ -114,7 +114,7 @@ public class BookmarkFragmentPresenterImp implements BookmarkFragmentPresenter {
             });
         }
 
-        bookmarkView.onBookmarkDeleted(undoStack.count() - qtyBefore);
+        bookmarkView.onBookmarkDeleted(undoStack.count() - qtyBefore, undoStack.count());
     }
 
     private Disposable connectToRepo() {
@@ -160,7 +160,7 @@ public class BookmarkFragmentPresenterImp implements BookmarkFragmentPresenter {
                 undoStack.push(article);
 
                 if (bookmarkView != null) {
-                    bookmarkView.onBookmarkDeleted(1);
+                    bookmarkView.onBookmarkDeleted(1, undoStack.count());
                 }
             }
         }
