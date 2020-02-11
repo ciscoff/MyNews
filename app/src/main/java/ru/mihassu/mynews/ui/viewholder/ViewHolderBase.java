@@ -2,13 +2,16 @@ package ru.mihassu.mynews.ui.viewholder;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.text.Html;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.text.HtmlCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
@@ -135,7 +138,14 @@ public class ViewHolderBase extends RecyclerView.ViewHolder implements View.OnCl
     // Основной текст
     private void itemContentSetText(MyArticle item) {
         if (item.description != null) {
-            String content = item.description.trim();
+
+            // Чтобы правильно отображать в TextView символы, записанные
+            // в html-коде ( например &laquo; )
+            Spanned htmlAsSpanned = HtmlCompat.fromHtml(
+                    item.description.trim(),
+                    HtmlCompat.FROM_HTML_MODE_LEGACY);
+
+            String content = htmlAsSpanned.toString();
             if (content.length() > contentThreshold) {
                 content = content.substring(0, contentThreshold) + "...";
             }
