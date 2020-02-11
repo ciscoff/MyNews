@@ -21,6 +21,8 @@
             android:id="@+id/item_preview"
             android:layout_width="match_parent"
             android:layout_height="256dp"
+            android:maxHeight="256dp"
+            android:minWidth="256dp"
             android:contentDescription="@null"
             android:scaleType="centerCrop" />
 
@@ -46,7 +48,6 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:paddingBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@id/footer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/item_title"

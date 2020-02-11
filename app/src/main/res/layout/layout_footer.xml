@@ -6,11 +6,11 @@
     android:id="@+id/footer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center_vertical"
+    android:gravity="center_vertical"
     android:layout_marginBottom="4dp"
+    android:layout_marginTop="2dp"
     android:orientation="horizontal"
     android:background="?attr/colorOnBackground"
-    app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/item_content">
@@ -20,8 +20,7 @@
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:layout_marginStart="12dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:contentDescription="@null"
         tool:srcCompat="@drawable/ic_unselected" />
 
     <TextView
@@ -38,5 +37,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="12dp"
+        android:contentDescription="@null"
         app:srcCompat="@drawable/asl_bookmark" />
 </LinearLayout>
