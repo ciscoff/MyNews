@@ -14,9 +14,9 @@
     tools:backgroundTint="@android:color/background_light">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:background="?android:attr/selectableItemBackground"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground">
 
         <LinearLayout
             android:id="@+id/header"
@@ -43,6 +43,7 @@
                 android:id="@+id/item_preview"
                 android:layout_width="128dp"
                 android:layout_height="128dp"
+                android:contentDescription="@null"
                 android:scaleType="centerCrop" />
 
         </LinearLayout>
@@ -60,7 +61,7 @@
             app:layout_constraintTop_toBottomOf="@+id/header"
             tools:text="Текст новости" />
 
-        <include layout="@layout/layout_footer"/>
+        <include layout="@layout/layout_footer" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

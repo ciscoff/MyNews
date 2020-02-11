@@ -26,4 +26,9 @@
         </group>
     </group>
 
+<!--    <path-->
+<!--        android:pathData="M0,0 l24,0, l0,24 l-24,0z"-->
+<!--        android:strokeWidth="0.1"-->
+<!--        android:strokeColor="#FF0000" />-->
+
 </vector>
