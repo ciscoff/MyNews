@@ -1,12 +1,12 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
 
-    <!--    Logo animation -->
+    <!-- Logo animation -->
     <dimen name="anim_screen_width">308dp</dimen>
     <dimen name="anim_screen_height">200dp</dimen>
     <dimen name="anim_screen_margin_bottom">64dp</dimen>
 
-    <!--Moving points values -->
+    <!-- Moving points values -->
     <dimen name="scale_point" format="float" type="dimen">1.6</dimen>
     <dimen name="pivot_x_point" format="float" type="dimen">0.0</dimen>
     <dimen name="pivot_y_point" format="float" type="dimen">2.0</dimen>
@@ -15,4 +15,11 @@
     <dimen name="translate_x_point_sb" format="float" type="dimen">0.0</dimen>
     <dimen name="translate_y_point_sb" format="float" type="dimen">6.0</dimen>
     <integer name="update_interval_minutes">20</integer>
+
+    <!-- BottomSheet -->
+    <dimen name="menu_item_margin">4dp</dimen>
+    <dimen name="peek_height">28dp</dimen>
+    <dimen name="badge_text_size">8sp</dimen>
+    <dimen name="badge_padding">3sp</dimen>
+
 </resources>

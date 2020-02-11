@@ -1,6 +1,6 @@
 package ru.mihassu.mynews.presenters.i;
 
 public interface BookmarkView {
-    void onBookmarkDeleted();
-    void onAllRestored();
+    void onBookmarkDeleted(int qty, int itemsInBasket);
+    void onBookmarkRestored(int qty, int remain);
 }

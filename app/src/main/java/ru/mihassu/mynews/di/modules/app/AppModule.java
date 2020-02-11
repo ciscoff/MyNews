@@ -18,6 +18,7 @@ import io.reactivex.subjects.Subject;
 import ru.mihassu.mynews.data.eventbus.ActualDataBus;
 import ru.mihassu.mynews.data.eventbus.ActualDataBusImp;
 import ru.mihassu.mynews.data.repository.RoomRepoBookmark;
+import ru.mihassu.mynews.domain.entity.Stack;
 import ru.mihassu.mynews.domain.model.DataSnapshot;
 import ru.mihassu.mynews.domain.model.MyArticle;
 import ru.mihassu.mynews.domain.repository.ChannelCollector;
@@ -65,7 +66,6 @@ public class AppModule {
         return BehaviorSubject.create();
     }
 
-
     @Provides
     @Singleton
     ActualDataBus providesActualDataBus(
@@ -81,5 +81,11 @@ public class AppModule {
     @Singleton
     CustomTabHelper providesCustomTabHelper() {
         return new CustomTabHelper();
+    }
+
+    @Provides
+    @Singleton
+    Stack<MyArticle> providesUndoStack() {
+        return new Stack<>();
     }
 }

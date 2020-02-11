@@ -30,18 +30,17 @@ public class BookmarkFragmentPresenterImp implements BookmarkFragmentPresenter {
     private ActualDataBus dataBus;
     private Disposable disposable;
     private BookmarkView bookmarkView;
-
+    private Stack<MyArticle> undoStack;
 
     public BookmarkFragmentPresenterImp(ActualDataBus dataBus,
                                         RoomRepoBookmark roomRepoBookmark,
-                                        BrowserLauncher browserLauncher) {
+                                        BrowserLauncher browserLauncher,
+                                        Stack<MyArticle> undoStack) {
         this.roomRepoBookmark = roomRepoBookmark;
         this.browserLauncher = browserLauncher;
         this.dataBus = dataBus;
+        this.undoStack = undoStack;
     }
-
-    // Стек для хранения удаленных закладок
-    private Stack<MyArticle> undoStack = new Stack<>();
 
     @Override
     public void onFragmentConnected(BookmarkView bookmarkView) {
@@ -64,24 +63,58 @@ public class BookmarkFragmentPresenterImp implements BookmarkFragmentPresenter {
     }
 
     @Override
-    public UndoStatus getUndoStatus() {
-        return (undoStack.isEmpty()) ? UndoStatus.EMPTY : UndoStatus.PRESENT;
+    public int getUndoCount() {
+        return undoStack.count();
     }
 
+    // Восстановить последнюю удаленную статью
     @Override
     public void restoreRecent() {
-        if(!undoStack.isEmpty()) {
+        if (!undoStack.isEmpty()) {
             MyArticle article = undoStack.pop();
 
-            if(article != null) {
+            if (article != null) {
+                article.isMarked = true;
+                roomRepoBookmark.insertArticle(article);
+            }
+            bookmarkView.onBookmarkRestored(1, undoStack.count());
+        }
+    }
+
+    // Восстановить все удаленные статьи
+    @Override
+    public void restoreAll() {
+
+        int qty = undoStack.count();
+
+        while (!undoStack.isEmpty()) {
+            MyArticle article = undoStack.pop();
+
+            if (article != null) {
                 article.isMarked = true;
                 roomRepoBookmark.insertArticle(article);
             }
         }
 
-        if(undoStack.isEmpty()) {
-            bookmarkView.onAllRestored();
+        bookmarkView.onBookmarkRestored(qty, 0);
+    }
+
+    // Очистить список закладок (поместить в undoStack)
+    @Override
+    public void deleteAll() {
+
+        int qtyBefore = undoStack.count();
+
+        if (liveData.getValue() != null) {
+            List<MyArticle> li = new ArrayList<>(liveData.getValue().getArticles());
+
+            li.forEach(article -> {
+                roomRepoBookmark.deleteArticle(article);
+                undoStack.push(article);
+            });
         }
+
+        bookmarkView.onBookmarkDeleted(undoStack.count() - qtyBefore, undoStack.count());
     }
 
     private Disposable connectToRepo() {
@@ -126,8 +159,8 @@ public class BookmarkFragmentPresenterImp implements BookmarkFragmentPresenter {
                 roomRepoBookmark.deleteArticle(article);
                 undoStack.push(article);
 
-                if(bookmarkView != null) {
-                    bookmarkView.onBookmarkDeleted();
+                if (bookmarkView != null) {
+                    bookmarkView.onBookmarkDeleted(1, undoStack.count());
                 }
             }
         }

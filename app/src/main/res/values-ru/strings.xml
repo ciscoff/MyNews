@@ -32,6 +32,12 @@
     <string name="time_hours_5_0">часов</string>
     <string name="time_ago">назад</string>
 
-    <!--    Menu -->
+    <!--    Menu Undo -->
     <string name="menu_undo">Восстановить</string>
+    <string name="menu_undo_recent">Последний</string>
+    <string name="menu_undo_all">Все</string>
+    <string name="menu_delete_all">Очистить</string>
+    <string name="message_restored">Восстановлено:</string>
+    <string name="message_deleted">Удалено:</string>
+
 </resources>

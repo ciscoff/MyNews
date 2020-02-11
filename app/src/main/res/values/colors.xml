@@ -16,4 +16,7 @@
 
     <color name="test">?android:colorBackground</color>
 
+    <color name="colorIconInLight">#404040</color>
+    <color name="colorIconInDark">#C0C0C0</color>
+
 </resources>
