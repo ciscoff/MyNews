@@ -36,8 +36,8 @@
         android:id="@+id/cl_undo_recent"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
-        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintEnd_toStartOf="@id/cl_undo_all"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/card_cap">
 
@@ -65,8 +65,8 @@
         android:id="@+id/cl_undo_all"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
-        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintEnd_toStartOf="@id/cl_delete_all"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toEndOf="@id/cl_undo_recent"
         app:layout_constraintTop_toBottomOf="@id/card_cap">
 
@@ -86,6 +86,34 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_undo_all" />
+
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <TextView
+            android:id="@+id/tv_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:background="@drawable/item_count"
+            android:gravity="center"
+            android:minWidth="14dp"
+            android:paddingStart="3dp"
+            android:paddingTop="2dp"
+            android:paddingEnd="3dp"
+            android:paddingBottom="2dp"
+            android:textColor="#FFF"
+            android:textSize="@dimen/badge_text_size"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/guideline"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="1" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -93,8 +121,8 @@
         android:id="@+id/cl_delete_all"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
-        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toEndOf="@+id/cl_undo_all"
         app:layout_constraintTop_toBottomOf="@id/card_cap">
 
@@ -114,28 +142,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_delete_all" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.5" />
-
-        <TextView
-            android:id="@+id/tv_badge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/item_count"
-            android:gravity="center"
-            android:minWidth="14dp"
-            android:padding="2dp"
-            android:textColor="#FFF"
-            android:textSize="@dimen/badge_text_size"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@id/guideline"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
